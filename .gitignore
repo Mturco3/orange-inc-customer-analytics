@@ -1,0 +1,12 @@
+# Data (course-provided, not redistributed)
+data/
+
+# Environment
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Course material and report drafts
+Resources/
+*.docx
+*.pdf
