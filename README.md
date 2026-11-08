@@ -6,8 +6,8 @@
 
 ## TL;DR
 - **Problem:** Orange Inc. merged three department databases (customers, product purchases, transactions) into one dataset of 20,000 customers and needs it cleaned and analysed.
-- **Approach:** remove incomplete records, compute revenue per customer, month and product, and compare products and loyalty tiers with co-purchase lift and per-customer measures.
-- **Result:** €33.4M total revenue in 2023, peaking in December (€5.18M). The silver tier brings 61.6% of revenue, but platinum customers spend 24% more per customer (€2,009 against €1,618).
+- **Approach:** remove incomplete records, compute revenue per customer, month and product, and compare products with a correlation matrix and loyalty tiers with per-customer measures.
+- **Result:** €33.4M total revenue in 2023, peaking in December (€5.18M). The silver tier brings the highest total revenue (61.6%), while platinum customers spend the most per customer (€2,009 against €1,618 for silver).
 - **Stack:** Python, pandas, matplotlib, Jupyter.
 
 ## Demo
@@ -17,14 +17,14 @@
 
 ## Data
 `orange_inc.csv`: 20,000 customers, 10 columns (age bracket, loyalty tier, gender, four product purchase flags, transaction date in 2023, card type). Missing cells are marked with `-`.
-The dataset is provided by the course BM04BIM Big Data Management and Analytics (RSM, Erasmus University Rotterdam) and is not included in this repository. Place it in `data/raw/orange_inc.csv`.
+The dataset is provided by the course BM04BIM Big Data Management and Analytics (RSM, Erasmus University Rotterdam) and is not included in this repository. Place it in `data/orange_inc.csv`.
 
 ## Approach
 1. Import the data, count missing values per column and drop the 428 incomplete rows (19,572 left).
 2. Add the number of products per customer, a multiple-purchase flag, revenue per customer from the product prices, and the month of purchase.
 3. Answer the descriptive questions: filtered counts, averages per tier, revenue by month and product, and a subgroup of young oPhone owners.
-4. Measure which products are bought together with attach rates and lift.
-5. Compare loyalty tiers and age brackets on total revenue, revenue per customer, average products and multiple-purchase rate.
+4. Measure which products are bought together with a correlation matrix.
+5. Compare loyalty tiers on total revenue, revenue per customer and average number of products.
 
 All steps are in [notebooks/orange_inc_analysis.ipynb](notebooks/orange_inc_analysis.ipynb).
 
@@ -42,9 +42,9 @@ All steps are in [notebooks/orange_inc_analysis.ipynb](notebooks/orange_inc_anal
 | gold | 4,911 | 26.7% | €1,812 | 1.98 |
 | platinum | 1,954 | 11.8% | €2,009 | 2.16 |
 
-oTV buyers are the least connected to the other products: only 40.7% of them also bought an oPhone, against 73.8% of all customers (lift 0.55).
+oTV buyers are the least connected to the other products: the oTV is negatively correlated with all of them, and only 40.7% of oTV buyers also bought an oPhone, against 81.3% of the other customers. Every customer bought at least one product, so these negative correlations are partly expected.
 
-![Co-purchase lift](Images/co_purchase_lift.png)
+![Product correlation](Images/product_correlation.png)
 
 ## How to run
 ```bash
@@ -53,14 +53,14 @@ cd orange-inc-customer-analytics
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-# put orange_inc.csv in data/raw/
+# put orange_inc.csv in data/
 jupyter nbconvert --to notebook --execute --inplace notebooks/orange_inc_analysis.ipynb
 ```
-The notebook also runs with `orange_inc.csv` placed in the same folder as the notebook. Figures are saved to `Images/`.
+Figures are saved to `Images/`.
 
 ## Project structure
 ```
-├── data/raw/                  # orange_inc.csv (not tracked)
+├── data/                      # orange_inc.csv (not tracked)
 ├── notebooks/
 │   └── orange_inc_analysis.ipynb
 ├── Images/                    # figures saved by the notebook
